@@ -23,7 +23,7 @@ jobs:
       - name: Deploy to Server
         run: |
           ssh -i ~/.ssh/id_rsa admin@18.140.85.74 << 'EOF'
-          cd /var/www/vue-project  # Ganti dengan path project Vue di server
+          cd /var/www/vue-project/sampe-autodeploy  # Ganti dengan path project Vue di server
           git pull origin main
           npm install
           npm run build
