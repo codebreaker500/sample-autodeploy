@@ -1,4 +1,4 @@
-name: Deploy Vue App to Debian Server
+name: Sample CI/CD dengan version tag
 
 on:
   push:
@@ -18,14 +18,17 @@ jobs:
           mkdir -p ~/.ssh
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H 18.140.85.74 >> ~/.ssh/known_hosts
+          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
-      - name: Deploy to Server
+      - name: Build App
         run: |
-          ssh -i ~/.ssh/id_rsa admin@18.140.85.74 << 'EOF'
-          cd /var/www/vue-autodeploy/sample-autodeploy  # Ganti dengan path project Vue di server
-          sudo git pull origin main
-          sudo npm install
-          sudo npm run build
-          systemctl restart nginx  # Restart Nginx jika pakai Nginx
-          EOF
+          npm install
+          npm run build
+
+      - name: Upload Files Build to Lightsail
+        run: |
+          scp -r dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/vue-autodeploy/sample-autodeploy/
+
+      - name: Restart Nginx
+        run: |
+          ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo systemctl restart nginx"
