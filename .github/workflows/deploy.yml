@@ -13,6 +13,7 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+        # konfigurasi SSH dengan menggunakan variabel yang telah dibuat sebelumnya
       - name: Setup SSH Key
         run: |
           mkdir -p ~/.ssh
@@ -20,15 +21,19 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
 
+        # Build aplikasi node, pada step ini ada dua opsional yaitu dapat di build dahulu di github kemudian hasil build di upload (step berikutnya)
+        # atau dapat mengupload semua file (langsung step berikutnya) dan melakukan build pada server (ini paling banyak digunakan untuk backend apps)
       - name: Build App
         run: |
           npm install
           npm run build
 
+        #upload file hasil build
       - name: Upload Files Build to Lightsail
         run: |
           scp -r dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/var/www/vue-autodeploy/sample-autodeploy/
 
+        #Restart Web Server dalam hal ini Nginx
       - name: Restart Nginx
         run: |
           ssh ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "sudo systemctl restart nginx"

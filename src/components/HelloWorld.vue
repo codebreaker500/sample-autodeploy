@@ -8,7 +8,7 @@ defineProps<{
   <div class="greetings">
     <h1 class="green">{{ msg }}</h1>
     <h3>
-      <a href="https://vuejs.org/" target="_blank" rel="noopener">This Version v1.0.6</a>
+      <a href="https://vuejs.org/" target="_blank" rel="noopener">This Version v1.0.7</a>
     </h3>
   </div>
 </template>
