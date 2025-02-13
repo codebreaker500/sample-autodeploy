@@ -24,8 +24,8 @@ jobs:
         run: |
           ssh -i ~/.ssh/id_rsa admin@18.140.85.74 << 'EOF'
           cd /var/www/vue-autodeploy/sample-autodeploy  # Ganti dengan path project Vue di server
-          git pull origin main
-          npm install
-          npm run build
+          sudo git pull origin main
+          sudo npm install
+          sudo npm run build
           systemctl restart nginx  # Restart Nginx jika pakai Nginx
           EOF
